@@ -42,7 +42,8 @@
 				text : '增加',
 				iconCls : 'icon-add',
 				handler : function(){
-					alert('增加');
+					// alert('增加');
+					$("#standardWindow").window('open');
 				}
 			}, {
 				id : 'button-edit',
@@ -129,7 +130,7 @@
 
 			<div region="center" style="overflow:auto;padding:5px;" border="false">
 				
-				<form>
+				<form method="post" action="../../standard_save">
 					<table class="table-edit" width="80%" align="center">
 						<tr class="title">
 							<td colspan="2">收派标准信息
