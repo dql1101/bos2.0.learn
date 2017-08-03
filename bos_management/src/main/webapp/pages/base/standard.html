@@ -17,6 +17,14 @@
 		<script src="../../js/easyui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
 		<script type="text/javascript">
 			$(function(){
+				
+				// 关闭窗口时清空内容
+				$('#standardWindow').window({
+					onBeforeClose: function () { 
+            			$("#standardForm").form('reset');
+					}
+				});
+				
 				// 先将body隐藏，再显示，不会出现页面刷新效果
 				$("body").css({visibility:"visible"});
 				
@@ -27,10 +35,10 @@
 					border : false,
 					rownumbers : true,
 					striped : true,
-					pageList: [30,50,100],
+					pageList: [5,10,15],
 					pagination : true,
 					toolbar : toolbar,
-					url : "../../data/standard.json",
+					url : "../../standard_findByPage",
 					idField : 'id',
 					columns : columns
 				});
@@ -50,7 +58,33 @@
 				text : '修改',
 				iconCls : 'icon-edit',
 				handler : function(){
-					alert('修改');
+					
+					
+					// alert('修改');
+					var $grids = $("#grid").datagrid('getSelections');
+					if($grids.length != 1) {
+						
+						// 弹出警告窗口
+						$.messager.alert('警告','修改数据时，只能选中一行','warning');
+						
+					} else {
+						
+						var row = $grids[0];
+						
+						// 将数据回显到窗口中
+						$("#standardForm").form('load', row);
+						// 显示窗口
+						$("#standardWindow").window('open');
+						
+						$("#save").click(function() {
+							// 判断时否全部填写
+							if($("#standardForm").form('validate')) {
+								$("#standardForm").submit();
+							} else {
+								$.messager.alert('提示信息', '表单中存在非法输入项', 'warning');	
+							}
+						});
+					}
 				}
 			},{
 				id : 'button-delete',
@@ -113,6 +147,7 @@
 				width : 120,
 				align : 'center'
 			} ] ];
+			
 		</script>
 	</head>
 
@@ -130,7 +165,7 @@
 
 			<div region="center" style="overflow:auto;padding:5px;" border="false">
 				
-				<form method="post" action="../../standard_save">
+				<form id="standardForm" method="post" action="../../standard_save">
 					<table class="table-edit" width="80%" align="center">
 						<tr class="title">
 							<td colspan="2">收派标准信息
