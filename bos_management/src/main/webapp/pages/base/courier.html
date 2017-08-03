@@ -260,7 +260,7 @@
 				<form id="courierForm" action="../../courier_save" method="post">
 					<table class="table-edit" width="80%" align="center">
 						<tr class="title">
-							<td colspan="4">收派员信息</td>
+							<td colspan="4">收派员信息<input type="hidden" name="id" /></td>
 						</tr>
 						<tr>
 							<td>快递员工号</td>
@@ -302,7 +302,7 @@
 								<input type="text" name="standard.id" 
 										class="easyui-combobox" 
 										data-options="required:true,valueField:'id',textField:'name',
-											url:'../../standard_findAll.action'"/>
+											url:'../../standard_findAll',editable:false,panelHeight:'auto'"/>
 							</td>
 						</tr>
 						<tr>

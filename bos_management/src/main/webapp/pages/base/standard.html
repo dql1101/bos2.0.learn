@@ -52,16 +52,24 @@
 				handler : function(){
 					// alert('增加');
 					$("#standardWindow").window('open');
+					
+					$("#save").click(function() {
+						// 判断时否全部填写
+						if($("#standardForm").form('validate')) {
+							$("#standardForm").submit();
+						} else {
+							$.messager.alert('提示信息', '表单中存在非法输入项', 'warning');	
+						}
+					});
 				}
 			}, {
 				id : 'button-edit',
 				text : '修改',
 				iconCls : 'icon-edit',
 				handler : function(){
-					
-					
 					// alert('修改');
 					var $grids = $("#grid").datagrid('getSelections');
+					
 					if($grids.length != 1) {
 						
 						// 弹出警告窗口
@@ -77,12 +85,7 @@
 						$("#standardWindow").window('open');
 						
 						$("#save").click(function() {
-							// 判断时否全部填写
-							if($("#standardForm").form('validate')) {
-								$("#standardForm").submit();
-							} else {
-								$.messager.alert('提示信息', '表单中存在非法输入项', 'warning');	
-							}
+							$("#standardForm").submit();
 						});
 					}
 				}

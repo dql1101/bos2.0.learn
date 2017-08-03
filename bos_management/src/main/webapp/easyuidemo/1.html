@@ -73,44 +73,6 @@
 
 			// 3、生成菜单
 			$.fn.zTree.init($("#baseMenu"), setting, zNodes);
-			
-			var currentTitle;
-			// 为我们的选项卡设置右击事件
-			$("#myTabs").tabs({
-				onContextMenu : function(e, title, index) {
-					currentTitle = title ; 
-					// 拦截默认事件
-					e.preventDefault();
-					// 显示菜单
-					$("#mm").menu('show',{
-						left:e.pageX,
-						top:e.pageY
-					});
-				}
-			});
-			
-			// 关闭当前标签
-			$("#closeThis").click(function() {
-				$("#myTabs").tabs('close',currentTitle);
-			});
-			
-			// 关闭其他标签
-			$("#closeOther").click(function() {
-				var tabs = $("#myTabs").tabs('tabs');
-				$(tabs).each(function(){
-					if($(this).panel('options').title != currentTitle){
-						$('#myTabs').tabs('close',$(this).panel('options').title);
-					}
-				});
-			});
-			
-			// 关闭所有标签
-			$("#closeAll").click(function() {
-				var tabs = $("#myTabs").tabs('tabs');
-				$(tabs).each(function(){
-					$('#myTabs').tabs('close',$(this).panel('options').title);
-				});
-			});
 		});
 	</script>
 	<!-- 布局layout -->
@@ -134,24 +96,19 @@
 			
 		</div>
 		<div data-options="region:'center',title:'中神通',split:'true'">
-	
+			
+			
 			<!-- 选项卡tabs -->
-		<div id="myTabs" class="easyui-tabs" data-options="fit:true">
+		<div id="myTabs" class="easyui-tabs">
 			<div title="选项卡1" style="padding:20px;display:none;">选项卡1</div>
 			<div title="选项卡2" data-options="closable:true" style="overflow:auto;padding:20px;display:none;">选项卡2</div>
-			<div title="选项卡3" data-options="iconCls:'icon-reload',closable:true" style="padding:20px;display:none;"></div>
+			<div title="选项卡3" data-options="iconCls:'icon-reload',closable:true" style="padding:20px;display:none;">选项卡3</div>
+			
 		</div>
-		
+
+			
 		</div>
 		<div data-options="region:'south',title:'南帝',split:'true'" style="height: 100px;">南帝</div>
 		<div data-options="region:'east',title:'东邪',split:'true'" style="width: 200px;">东邪</div>
-		
-		<!-- 创建一个菜单 -->
-		<div id="mm" class="easyui-menu" style="width: 120px;">
-			<div id="closeThis">关闭当前标签</div>
-			<div id="closeOther">关闭其他标签</div>
-			<div class="menu-sep"></div>
-			<div data-options="iconCls:'icon-cancel'" id="closeAll">关闭所有标签</div>
-		</div>
 	</body>
 </html>
