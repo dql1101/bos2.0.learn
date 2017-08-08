@@ -33,5 +33,6 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="src" path="/crm_domain"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

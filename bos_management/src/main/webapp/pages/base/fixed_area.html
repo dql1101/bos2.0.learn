@@ -35,10 +35,39 @@
 			
 			function doAdd(){
 				$('#addWindow').window("open");
+				
+				$("#save").click(function() {
+				 	if($("#fixedAreaForm").form('validate')) {
+						$("#fixedAreaForm").submit();
+					} else {
+						$.messager.alert('提示信息', '表单中存在非法输入项', 'warning');
+					} 
+				});	 
 			}
 			
 			function doEdit(){
-				alert("修改...");
+				var $grids = $("#grid").datagrid('getSelections');
+				if($grids.length != 1) {
+					
+					// 弹出警告窗口
+					$.messager.alert('警告','修改数据时，只能选中一行','warning');
+				} else {
+					
+					var row = $grids[0];
+					// 将数据回显到窗口中
+					$("#fixedAreaForm").form('load', row);
+					// 显示窗口
+					$("#addWindow").window('open');
+					
+					$("#save").click(function() {
+						// 判断时否全部填写
+						if($("#fixedAreaForm").form('validate')) {
+							$("#fixedAreaForm").submit();
+						} else {
+							$.messager.alert('提示信息', '表单中存在非法输入项', 'warning');	
+						}
+					});
+				}
 			}
 			
 			function doDelete(){
@@ -47,6 +76,15 @@
 			
 			function doSearch(){
 				$('#searchWindow').window("open");
+				
+				// 查询按钮事件
+				$("#btn").click(function(){
+					var params = $("#searchForm").serializeJson() ;
+					// 将json对象 绑定datagrid上，完成带有条件 查询请求 
+					$("#grid").datagrid('load',params); 
+					// 关闭查询窗口 
+					$("#searchWindow").window('close');
+				});
 			}
 			
 			// 关联客户窗口弹出
@@ -64,10 +102,10 @@
 					});
 					
 					// 发起Ajax请求 
-					$.post("../../fixedArea_findNoAssociationCustomers.action", function(data){
-						// 查询所有 未关联定区客户列表
+					$.post("../../fixedArea_findNoAccessCus", function(data){
 						// 清空列表
 						$("#noassociationSelect").empty();
+						// 查询所有 未关联定区客户列表
 						$(data).each(function(){
 							var option = $("<option value='"+this.id+"'>"+this.username+"("+this.address+")</option>");
 							$("#noassociationSelect").append(option);
@@ -78,10 +116,12 @@
 						// 弹出关联窗口 
 						$('#customerWindow').window('open');
 					});
-					$.post("../../fixedArea_findHasAssociationFixedAreaCustomers.action",{"id":rows[0].id} , function(data){
-						// 查询所有 关联当前选中定区客户列表
+					
+					
+					$.post("../../fixedArea_findAccessCus",{"id":rows[0].id} , function(data){
 						// 清空列表
 						$("#associationSelect").empty();
+						// 查询所有 关联当前选中定区客户列表
 						$(data).each(function(){
 							var option = $("<option value='"+this.id+"'>"+this.username+"("+this.address+")</option>");
 							$("#associationSelect").append(option);
@@ -187,10 +227,10 @@
 					border : true,
 					rownumbers : true,
 					striped : true,
-					pageList: [30,50,100],
+					pageList: [10,20,30],
 					pagination : true,
 					toolbar : toolbar,
-					url : "../../fixedArea_pageQuery.action",
+					url : "../../fixedArea_findByPage",
 					idField : 'id',
 					columns : columns,
 					onDblClickRow : doDblClickRow
@@ -266,6 +306,14 @@
 						$.messager.alert("警告","表单中存在非法数据","warning");
 					}
 				});
+				
+				// 关闭窗口时清空内容
+				$("#addWindow").window({
+					onBeforeClose: function () { 
+		    			$("#fixedAreaForm").form('reset');
+					}
+				});
+				
 			});
 		
 			function doDblClickRow(){
@@ -446,7 +494,7 @@
 
 			<div style="overflow:auto;padding:5px;" border="false">
 				<form id="fixedAreaForm" 
-					action="../../fixedArea_save.action" method="post">
+					action="../../fixedArea_save" method="post">
 					<table class="table-edit" width="80%" align="center">
 						<tr class="title">
 							<td colspan="2">定区信息</td>
@@ -524,7 +572,7 @@
 			collapsible="false" closed="true" minimizable="false" maximizable="false" style="top:20px;left:200px;width: 700px;height: 300px;">
 			<div style="overflow:auto;padding:5px;" border="false">
 				<form id="customerForm" 
-					action="../../fixedArea_associationCustomersToFixedArea.action" method="post">
+					action="../../fixedArea_accessCusToFixedArea" method="post">
 					<table class="table-edit" width="80%" align="center">
 						<tr class="title">
 							<td colspan="3">关联客户</td>
@@ -557,7 +605,7 @@
 			collapsible="false" closed="true" minimizable="false" maximizable="false" style="top:20px;left:200px;width: 700px;height: 300px;">
 			<div style="overflow:auto;padding:5px;" border="false">
 				<form id="courierForm" 
-					action="../../fixedArea_associationCourierToFixedArea.action" method="post">
+					action="../../fixedArea_accessCourierToFixedArea" method="post">
 					<table class="table-edit" width="80%" align="center">
 						<tr class="title">
 							<td colspan="2">关联快递员</td>
@@ -568,7 +616,7 @@
 								<!-- 存放定区编号 -->
 								<input type="hidden" name="id" id="courierFixedAreaId" />
 								<input type="text" name="courierId" class="easyui-combobox" required="true" 
-									data-options="url:'../../courier_findnoassociation.action',
+									data-options="url:'../../courier_findnoaccess', editable:false,panelHeight:'auto',
 										valueField:'id',textField:'info'"/>
 							</td>
 						</tr>
@@ -576,7 +624,7 @@
 							<td>选择收派时间</td>
 							<td>
 								<input type="text" name="takeTimeId" class="easyui-combobox" required="true"
-									data-options="url:'../../taketime_findAll.action', 
+									data-options="url:'../../taketime_findAll', editable:false,panelHeight:'auto',
 									valueField:'id',textField:'name'" />
 							</td>
 						</tr>

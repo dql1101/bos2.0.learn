@@ -26,13 +26,31 @@
 					border : false,
 					rownumbers : true,
 					striped : true,
-					pageList: [30,50,100],
+					pageList: [10,20,30],
 					pagination : true,
 					toolbar : toolbar,
-					url : "../../data/take_time.json",
+					url : "../../taketime_findByPage",
 					idField : 'id',
 					columns : columns
 				});
+				
+				// 添加、修改分区
+				$('#addWindow').window({
+			        title: '添加修改分区',
+			        width: 600,
+			        modal: true,
+			        shadow: true,
+			        closed: true,
+			        height: 400,
+			        resizable:false
+			    });
+			    
+			    $("#addWindow").window({
+			    	onBeforeClose: function () { 
+		    			$("#taketimeForm").form('reset');
+					}
+			    });
+			    
 			});	
 			
 			//工具栏
@@ -41,14 +59,43 @@
 				text : '增加',
 				iconCls : 'icon-add',
 				handler : function(){
-					alert('增加');
+					$("#addWindow").window("open");
+					
+					$("#save").click(function() {
+					 	if($("#taketimeForm").form('validate')) {
+							$("#taketimeForm").submit();
+						} else {
+							$.messager.alert('提示信息', '表单中存在非法输入项', 'warning');
+						} 
+					});	 
 				}
 			}, {
 				id : 'button-edit',
 				text : '修改',
 				iconCls : 'icon-edit',
 				handler : function(){
-					alert('修改');
+					var $grids = $("#grid").datagrid('getSelections');
+					if($grids.length != 1) {
+						
+						// 弹出警告窗口
+						$.messager.alert('警告','修改数据时，只能选中一行','warning');
+					} else {
+						
+						var row = $grids[0];
+						// 将数据回显到窗口中
+						$("#fixedAreaForm").form('load', row);
+						// 显示窗口
+						$("#addWindow").window('open');
+						
+						$("#save").click(function() {
+							// 判断时否全部填写
+							if($("#taketimeForm").form('validate')) {
+								$("#taketimeForm").submit();
+							} else {
+								$.messager.alert('提示信息', '表单中存在非法输入项', 'warning');	
+							}
+						});
+					}
 				}
 			},{
 				id : 'button-delete',
@@ -129,6 +176,78 @@
 	<body class="easyui-layout" style="visibility:hidden;">
 		<div region="center" border="false">
 			<table id="grid"></table>
+		</div>
+		<!-- 添加 修改分区 -->
+		<div class="easyui-window" title="排班时间添加修改" id="addWindow" collapsible="false" minimizable="false" maximizable="false" style="top:20px;left:200px">
+			<div style="height:31px;overflow:hidden;" split="false" border="false">
+				<div class="datagrid-toolbar">
+					<a id="save" icon="icon-save" href="#" class="easyui-linkbutton" plain="true">保存</a>
+				</div>
+			</div>
+			<div style="overflow:auto;padding:5px;" border="false">
+				<form id="taketimeForm" method="post" action="../../taketime_save">
+					<table class="table-edit" width="80%" align="center">
+						<tr class="title">
+							<td colspan="2">排班信息<input type="hidden" name="id" /></td>
+							
+						</tr>
+						<tr>
+							<td>时间名称 </td>
+							<td>
+								<input type="text" name="name" class="easyui-validatebox" required="true" />
+							</td>
+						</tr>
+						<tr>
+							<td>平时上班时间 </td>
+							<td>
+								<input type="text" name="normalWorkTime" class="easyui-validatebox" required="true" />
+							</td>
+						</tr>
+						<tr>
+							<td>平时休息时间 </td>
+							<td>
+								<input type="text" name="normalDutyTime" class="easyui-validatebox" required="true" />
+							</td>
+						</tr>
+						<tr>
+							<td>周六上班时间 </td>
+							<td>
+								<input type="text" name="satWorkTime" class="easyui-validatebox" required="true" />
+							</td>
+						</tr>
+						<tr>
+							<td>周六休息时间 </td>
+							<td>
+								<input type="text" name="satDutyTime" class="easyui-validatebox" required="true" />
+							</td>
+						</tr>
+						<tr>
+							<td>周日上班时间 </td>
+							<td>
+								<input type="text" name="sunWorkTime" class="easyui-validatebox" required="true" />
+							</td>
+						</tr>
+						<tr>
+							<td>周日休息时间 </td>
+							<td>
+								<input type="text" name="sunDutyTime" class="easyui-validatebox" required="true" />
+							</td>
+						</tr>
+						<tr>
+							<td>所属单位 </td>
+							<td>
+								<input type="text" name="company" class="easyui-validatebox" required="true" />
+							</td>
+						</tr>
+						<tr>
+							<td>状态</td>
+							<td>
+								<input type="text" name="status" class="easyui-validatebox" required="true" />
+							</td>
+						</tr>
+					</table>
+				</form>
+			</div>
 		</div>
 	</body>
 </html>

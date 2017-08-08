@@ -17,6 +17,14 @@
 		<script type="text/javascript">
 			function doAdd(){
 				$('#addWindow').window("open");
+				
+				$("#save").click(function() {
+					if($("#subAreaForm").form('validate')) {
+						$("#fixedAreaForm").submit();
+					} else {
+						$.messager.alert('提示信息', '表单中存在非法输入项', 'warning');
+					} 
+				});
 			}
 			
 			function doEdit(){
@@ -157,7 +165,7 @@
 					pageList: [30,50,100],
 					pagination : true,
 					toolbar : toolbar,
-					url : "../../data/sub_area.json",
+					url : "../../subArea_findByPage",
 					idField : 'id',
 					columns : columns,
 					onDblClickRow : doDblClickRow
@@ -188,6 +196,13 @@
 					alert("执行查询...");
 				});
 				
+				// 关闭修改窗口时清空表单内的数据
+				$("#addWindow").window({
+					onBeforeClose : function() {
+						$("#subAreaForm").form('reset');
+					}
+				});
+				
 			});
 		
 			function doDblClickRow(){
@@ -209,7 +224,7 @@
 			</div>
 
 			<div style="overflow:auto;padding:5px;" border="false">
-				<form>
+				<form id="subAreaForm" action="../../subArea_save" method="post">
 					<table class="table-edit" width="80%" align="center">
 						<tr class="title">
 							<td colspan="2">分区信息</td>
