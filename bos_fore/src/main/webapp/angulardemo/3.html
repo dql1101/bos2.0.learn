@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>AngularJS的遍历</title>
+		<script type="text/javascript" src="../js/angular.min.js"></script>
+	</head>
+	<body ng-app="myApp" ng-controller="myCtrl">
+		<table align="center" border="1" width="50%">
+			<tr>
+				<th>序号</th>
+				<th>商品编号</th>
+				<th>商品名称</th>
+				<th>价格</th>
+			</tr>
+			<tr align="center" ng-repeat="product in products">
+				<td>{{$index + 1}}</td>
+				<td>{{product.id}}</td>
+				<td>{{product.name}}</td>
+				<td>{{product.price}}</td>
+			</tr>
+		</table>
+	</body>
+	<script type="text/javascript">
+		var myApp = angular.module("myApp", []);
+		
+		myApp.controller("myCtrl", ["$scope", function($scope) {
+			$scope.products = [
+				{
+					id : 1,
+					name : '笔记本',
+					price : 4999
+				},{
+					id : 2,
+					name : '电视机',
+					price : 5999
+				},{
+					id : 3,
+					name : '洗衣机',
+					price : 1000
+				}
+			];
+		}]);
+	</script>
+</html>

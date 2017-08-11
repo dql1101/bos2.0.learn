@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>AngularJS的入门使用</title>
+		<script type="text/javascript" src="../js/angular.min.js"></script>
+	</head>
+	<body ng-app="myApp" ng-controller="myCtrl">
+		<input type="text" name="name" ng-model="name" /> <br />
+		{{name}}
+		<hr />
+		<span ng-bind="name"></span>
+	</body>
+	
+	<script type="text/javascript">
+		var myApp = angular.module("myApp", []);
+		
+		// 添加控制器
+		myApp.controller("myCtrl", ["$scope", function($scope) {
+			$scope.name = "龙傲天";
+		}]);
+		
+	</script>
+</html>

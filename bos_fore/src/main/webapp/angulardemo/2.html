@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>AngularJS的事件绑定</title>
+		<script type="text/javascript" src="../js/angular.min.js" ></script>
+	</head>
+	<body ng-app="myApp" ng-controller="myCtrl">
+		<!-- 方式一-->
+		<div>
+			<input type="text" name="name" ng-model="name1" />
+			<input type="button" value="清空1" ng-click="name1=''" /><br />
+			{{name1}}
+		</div>
+		<hr />
+		<!-- 方式二 -->
+		<div>
+			<input type="text" name="name2" ng-model="name2"/>
+			<input type="button" value="清空2" ng-click="clearVal()" /><br />
+			{{name2}}
+		</div>
+	</body>
+	<script type="text/javascript">
+		var myApp = angular.module("myApp", []);
+		
+		myApp.controller("myCtrl", ["$scope", function($scope) {
+			$scope.name1 = "龙傲天";
+			$scope.name2 = "赵日天";
+			
+			$scope.clearVal = function() {
+				$scope.name2 = "";
+			}
+		}]);
+	</script>
+</html>
