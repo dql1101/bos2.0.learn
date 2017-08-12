@@ -18,6 +18,7 @@
 			$(function() {
 				// 宣传任务表格			
 				$("#grid").datagrid({
+					url : '../../promotion_findByPage',
 					columns: [
 						[{
 							field: 'id',
@@ -31,15 +32,24 @@
 						}, {
 							field: 'titleImg',
 							title: '宣传图片',
-							width: 200
+							width: 200,
+							formatter: function(value,row,index){
+						        return "<img src='" + value + "' width='100' height='100' />";
+						    }  
 						},{
 							field: 'startDate',
 							title: '发布时间',
-							width: 100
+							width: 100,
+							formatter: function(value,row,index){
+						        return value.replace("T", " ");
+						    }  
 						}, {
 							field: 'endDate',
 							title: '实效时间',
-							width: 100
+							width: 100,
+							formatter: function(value,row,index){
+						        return value.replace("T", " ");
+						    }  
 						}, {
 							field: 'updateTime',
 							title: '更新时间',
@@ -55,7 +65,14 @@
 						}, {
 							field: 'status',
 							title: '状态',
-							width: 100
+							width: 100,
+							formatter: function(value,row,index){
+						        if(value == "1") {
+						        	return "进行中";
+						        } else {
+						        	return "已结束";
+						        }
+						    }  
 						}]
 					],
 					pagination: true,
