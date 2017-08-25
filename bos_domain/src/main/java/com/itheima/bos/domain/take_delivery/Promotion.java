@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.itheima.bos.constant.Constants;
+
 /**
  * @description:促销信息实体类
  */
@@ -60,7 +62,10 @@ public class Promotion implements Serializable {
 	}
 
 	public String getTitleImg() {
-		return titleImg;
+		if(titleImg.startsWith("http")) {
+			return titleImg;
+		}
+		return Constants.BOS_MANAGEMENT_URL + titleImg;
 	}
 
 	public void setTitleImg(String titleImg) {
@@ -124,7 +129,10 @@ public class Promotion implements Serializable {
 	}
 
 	public String getDescription() {
-		return description;
+		if(description.contains(Constants.BOS_MANAGEMENT_URL + "/bos_management")) {
+			return description;
+		}
+		return description.replace("src=\"/bos_management", "src=\"" + Constants.BOS_MANAGEMENT_URL + "/bos_management");
 	}
 
 	public void setDescription(String description) {

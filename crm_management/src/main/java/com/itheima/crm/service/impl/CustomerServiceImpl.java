@@ -65,4 +65,15 @@ public class CustomerServiceImpl implements CustomerService {
 		customerRepository.updateType(telephone);
 	}
 
+	// 用户登录
+	@Override
+	public Customer login(String telephone, String password) {
+		return customerRepository.findByTelephoneAndPassword(telephone, password);
+	}
+
+	@Override
+	public String findFixedAreaIdByAddress(String address) {
+		return customerRepository.findFixedAreaIdByAddress(address);
+	}
+
 }

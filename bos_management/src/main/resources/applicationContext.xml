@@ -33,7 +33,12 @@
 		<!-- 数据源 -->
 		<property name="dataSource" ref="dataSource" />
 		<!-- 包扫描 -->
-		<property name="packagesToScan" value="com.itheima.bos.domain" />
+		<property name="packagesToScan">
+			<list>
+				 <value>com.itheima.bos.domain</value>
+				 <value>com.itheima.bos.system</value>
+			</list>
+		</property>
 		<!-- 持久化提供者 -->
 		<property name="persistenceProvider">
 			<bean class="org.hibernate.ejb.HibernatePersistence" />
@@ -80,4 +85,13 @@
 	
 	<!-- 整合JPA -->
 	<jpa:repositories base-package="com.itheima.bos.dao"></jpa:repositories>
+	
+	<!-- 引入webservice配置 -->
+	<import resource="applicationContext-webService.xml" />
+	<!-- 引入Quartz配置 -->
+	<import resource="applicationContext-quartz.xml"/>
+	<!-- 引入ActiveMQ配置 -->
+	<import resource="applicationContext-mq.xml"/>
+	<!-- 引入shiro权限控制 -->
+	<import resource="applicationContext-shiro.xml"/>
 </beans>

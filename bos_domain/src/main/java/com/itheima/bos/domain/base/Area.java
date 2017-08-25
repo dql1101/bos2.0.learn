@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.struts2.json.annotations.JSON;
 
@@ -19,6 +20,7 @@ import com.alibaba.fastjson.annotation.JSONField;
  */
 @Entity
 @Table(name = "T_AREA")
+@XmlRootElement(name="area")
 public class Area {
 
 	@Id

@@ -11,7 +11,7 @@
 		<link rel="stylesheet" type="text/css" href="../../js/easyui/themes/icon.css">
 		<link rel="stylesheet" type="text/css" href="../../js/easyui/ext/portal.css">
 		<link rel="stylesheet" type="text/css" href="../../css/default.css">
-		<link rel="stylesheet" type="text/css" href="../../css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
 		<script type="text/javascript" src="../../js/easyui/jquery.easyui.min.js"></script>
 		<script type="text/javascript" src="../../js/easyui/ext/jquery.portal.js"></script>
 		<script type="text/javascript" src="../../js/easyui/ext/jquery.cookie.js"></script>
@@ -28,6 +28,33 @@
 					if($('#orderForm').form('validate')) {
 						$('#orderForm').submit();
 					}
+				});
+				
+				// 为订单号添加一个onbulr事件
+				$("#orderNum").blur(function() {
+					// 异步加载数据
+					/*$.ajax({
+						type:"post",
+						url:"../../order_findByOrderNum",
+						data : {orderNum : $(this).val()},
+						dataType : "json",
+						success : function(data) {
+							if(data.success) {
+								alert("显示成功");
+							} else {
+								alert("显示失败");
+							}
+						}
+					});*/
+					$.post("../../order_findByOrderNum",{orderNum: $(this).val()}, 
+					function(data){
+						// 封装结果数据  { success:true , orderData: {} }
+						if(data.success){
+							alert("查询成功");
+						}else{
+							alert("查询失败");
+						}
+					});
 				});
 			});
 		</script>
@@ -49,7 +76,7 @@
 						<td>订单号</td>
 						<td>
 							<input type="hidden" name="order.id" id="orderId" />
-							<input type="text" name="order.orderNum" />
+							<input type="text" name="order.orderNum" id="orderNum" />
 						</td>
 						<td>运单号</td>
 						<td>

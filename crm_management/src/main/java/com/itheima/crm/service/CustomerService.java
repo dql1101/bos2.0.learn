@@ -49,4 +49,16 @@ public interface CustomerService {
 	@Path("/customer/updatetype/{telephone}")
 	@GET
 	public void updateType(@PathParam("telephone") String telephone);
+	
+	// 用户登录
+	@Path("/customer/login")
+	@GET
+	@Produces({ "application/xml", "application/json" })
+	public Customer login(@QueryParam("telephone") String telephone, @QueryParam("password") String password);
+
+	// 根据订单的地址获取对应的定区id
+	@Path("/customer/findFixedAreaIdByAddress/{address}")
+	@GET
+	@Produces({ "application/xml", "application/json" })
+	public String findFixedAreaIdByAddress(@PathParam("address") String address);
 }

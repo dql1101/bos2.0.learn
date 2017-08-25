@@ -3,7 +3,59 @@
 -->
 <link href="css/city-picker.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" href="css/styleorder.css">
+<script type="text/javascript">
+	// 百度地图API功能
+	function G(id) {
+		return document.getElementById(id);
+	}
 
+	var ac = new BMap.Autocomplete(    //建立一个自动完成的对象
+		{
+			"input" : "sendAddress"
+	});
+
+	ac.addEventListener("onhighlight", function(e) {  //鼠标放在下拉列表上的事件
+	var str = "";
+		var _value = e.fromitem.value;
+		var value = "";
+		if (e.fromitem.index > -1) {
+			value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+		}    
+		str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
+		
+		value = "";
+		if (e.toitem.index > -1) {
+			_value = e.toitem.value;
+			value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+		}    
+		str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
+		G("searchResultPanel").innerHTML = str;
+	});
+
+	var myValue;
+	ac.addEventListener("onconfirm", function(e) {    //鼠标点击下拉列表后的事件
+	var _value = e.item.value;
+		myValue = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+		G("searchResultPanel").innerHTML ="onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
+		
+		// 选中详细地址后，调用百度地图获取 云地理编码 
+		var address = encodeURIComponent(myValue);
+		$.getJSON(
+			"http://api.map.baidu.com/cloudgc/v1?ak=W0MDyBlzA96DRRl4zHp32LktUkfYuSBl&address="+address+"&callback=?",
+			function(data){
+			if(data.status == 0 && data.result.length>0 ){
+				$('#sendAreaInfo').citypicker('reset');
+				$('#sendAreaInfo').citypicker('destroy');
+					
+				$('#sendAreaInfo').citypicker({
+					province: data.result[0].address_components.province ,
+					city: data.result[0].address_components.city ,
+					district: data.result[0].address_components.district ,
+				});
+			}
+		});
+	});
+</script>
 <div class="order" id="ng-app" ng-app="app">
 	<!-- orderall -->
 	<section>
@@ -47,7 +99,7 @@
 				</ul>
 				<div class="tab-content">
 					<div role="tabpanel" class="tab-pane fade in active" id="one">
-						<form id="orderForm" class="form-horizontal" method="post">
+						<form id="orderForm" class="form-horizontal" action="order_add" method="post">
 						<!--寄件人信息 -->
 						<div class="model">
 							<div class="areatitle">
@@ -282,6 +334,7 @@
 
 											<div class="col-sm-8">
 												<input name="recAddress" type="text" class="form-control" placeholder="街道详细（精确到门牌号） " required="required">
+												<div id="searchRecPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
 											</div>
 										</div>
 									</div>
